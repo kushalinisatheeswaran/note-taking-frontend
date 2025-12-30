@@ -9,12 +9,13 @@ export const AuthProvider = ({ children }) => {
  const [loading, setLoading] = useState(true);
 
  const fetchUser = async () => {
+     
     try{
         const response = await axios.get("http://localhost:5000/api/auth/me",
         { withCredentials:true,});
-        setUser(response.data.user);
-        
-    }
+      
+    setUser(response.data.user);
+}
     catch(error){
         setUser(null);
         console.log("Fetch user error:",error);
@@ -41,10 +42,26 @@ export const AuthProvider = ({ children }) => {
     }
     };
 
+
+    const Logout = async()=>{
+        try{
+           await axios.post("http://localhost:5000/api/auth/logout",
+            {},
+            { withCredentials:true,});
+            setUser(null);
+        } catch(error){
+            setUser(null);
+            console.log("Logout error:",error);
+        }
+
+    };
+
+
+
     useEffect(() => {
         fetchUser();}, []);
 
-    return (<AuthContext.Provider value={{ user, loading, login }}>
+    return (<AuthContext.Provider value={{ user, loading, login, Logout }}>
         { children }
         </AuthContext.Provider>
 
